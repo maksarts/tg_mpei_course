@@ -1,0 +1,74 @@
+//https://leetcode.com/problems/permutation-sequence/
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+    int fact = 1;
+	int pos;
+	int count = 0;
+	
+	if (n > 1) {
+		vector<int> str(n);
+		vector<int> v(n);
+		for (int i = 0; i < n; i++) {
+			v[i] = i + 1;
+		}
+
+		int s = n;
+		do {
+			for (int i = 2; i < s; i++) {
+				fact *= i;
+			}
+			double a = double(k) / fact;
+			if (a != int(a)) {
+				pos = int(a + 1);
+			}
+			else {
+				pos = int(a);
+			}
+			str[count] = pos;
+			
+			if (k % fact == 0)
+				k = fact;
+				else if (k > fact * int(a))
+					k -= fact * int(a);
+				
+
+			s--; fact = 1; count++;
+		} while (s > 1);
+
+		str[count] = 1;
+
+		string strfinal;
+		for (int i = 0; i < n; i++) {
+			strfinal += to_string(v[str[i] - 1]);
+			for (int j = str[i] - 1; j < n - 1; j++) {
+				v[j] = v[j + 1];
+			}
+		}
+
+		return strfinal;
+	}
+	else return "1";
+        
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        getline(cin, line);
+        int k = stringToInteger(line);
+        
+        string ret = Solution().getPermutation(n, k);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
