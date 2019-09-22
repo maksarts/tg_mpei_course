@@ -1,0 +1,30 @@
+//https://leetcode.com/problems/factorial-trailing-zeroes/
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int zeros = 0;
+	    for (int i = 1; pow(5, i) <= n; i++) {
+		    zeros += (n / pow(5, i));
+	    }
+	    return zeros;
+        
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().trailingZeroes(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
