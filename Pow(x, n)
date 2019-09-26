@@ -6,27 +6,17 @@ public:
 	if (n == 0) return 1;
 	if (n == 1) return x;
 	if (x == 0 || x == 1) return x;
-	if (n < 0)
-		if (x > 0) {
-			return 1 / exp(n * log(1 / x));
-		}
-		else
-		{
-			if (n % 2 == 0)
-				return 1 / exp(n * log(1 / (-x)));
-			else 
-				return -1 / exp(n * log(1 / (-x)));
-		}
-		
-	if (x > 0) {
-		return exp(n * log(x));
+	int count = 0;
+        do{
+            if(n % 2 == 0){
+                count++;
+                n /= 2;
+            }
+        }while(n % 2 == 0);
+        x = pow(x,n);
+        for(int i = 0;i < count; i++){
+            x *= x;
+        }
+		return x;
 	}
-	else
-	{
-		if (n % 2 == 0)
-			return exp(n * log(-x));
-		else
-			return -exp(n * log(-x));
-	}
-}
 };
