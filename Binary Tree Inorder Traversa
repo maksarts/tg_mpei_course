@@ -11,18 +11,25 @@
  */
 class Solution {
 public:
-     vector<int> inorderTraversal(TreeNode* root) {
-         vector <int> a;
-         if (root) Rec(root, a);
-         return a;
-     }
-    
-    void Rec (TreeNode *&node, vector <int> &a){
-        if (node){
-            if (node->left) Rec(node->left, a);
-            a.push_back(node->val);
-            if (node->right) Rec(node->right, a);
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        if(root == NULL){
+            return res;
         }
-        return;
+        value(root);
+        res = result;
+        return res;
     }
-    };
+private:
+    vector<int> result;
+    void value(TreeNode* root){
+        if(root->left != NULL){
+            value(root->left);
+        }
+        result.push_back(root->val);
+        if(root->right != NULL){
+            value(root->right);
+        }
+    }
+    
+};
