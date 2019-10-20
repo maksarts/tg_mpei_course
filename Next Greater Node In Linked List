@@ -1,4 +1,5 @@
-//https://leetcode.com/problems/next-greater-node-in-linked-list/submissions/
+//https://leetcode.com/problems/next-greater-node-in-linked-list/
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -11,103 +12,29 @@ class Solution {
 public:
     vector<int> nextLargerNodes(ListNode* head) {
         vector<int> result;
-        if(head == NULL){
-            return result;
-        }
-        if(head->next == NULL){
-            result.push_back(0);
-            return result;
-        }
-        while(head != NULL){
-            int val = head->val;
-            ListNode* node = head;
-            bool flag = 0;
-            while(node->next != NULL && !flag){
-                node=node->next;
-                if(node->val > val){
-                    flag = 1;
-                    result.push_back(node->val);
+        if(head && head->next){
+            while(head->next){
+                int max = head->val;
+                ListNode* node = head->next;
+                while(node){
+                    if (node->val > max){
+                        max = node->val;
+                        break;
+                    }
+                    node = node->next;
                 }
-            }
-                if(!flag){
+                if (max > head->val){
+                    result.push_back(max);
+                } else {
                     result.push_back(0);
-                }    
-            head = head->next;
-        }
-
+                }
+                node = head->next;
+                head = head->next;
+            }
+            result.push_back(0);
+        } else if(head) {
+            result.push_back(0);
+        } 
         return result;
     }
 };
-
-void trimLeftTrailingSpaces(string &input) {
-    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
-        return !isspace(ch);
-    }));
-}
-
-void trimRightTrailingSpaces(string &input) {
-    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
-        return !isspace(ch);
-    }).base(), input.end());
-}
-
-vector<int> stringToIntegerVector(string input) {
-    vector<int> output;
-    trimLeftTrailingSpaces(input);
-    trimRightTrailingSpaces(input);
-    input = input.substr(1, input.length() - 2);
-    stringstream ss;
-    ss.str(input);
-    string item;
-    char delim = ',';
-    while (getline(ss, item, delim)) {
-        output.push_back(stoi(item));
-    }
-    return output;
-}
-
-ListNode* stringToListNode(string input) {
-    // Generate list from the input
-    vector<int> list = stringToIntegerVector(input);
-
-    // Now convert that list into linked list
-    ListNode* dummyRoot = new ListNode(0);
-    ListNode* ptr = dummyRoot;
-    for(int item : list) {
-        ptr->next = new ListNode(item);
-        ptr = ptr->next;
-    }
-    ptr = dummyRoot->next;
-    delete dummyRoot;
-    return ptr;
-}
-
-string integerVectorToString(vector<int> list, int length = -1) {
-    if (length == -1) {
-        length = list.size();
-    }
-
-    if (length == 0) {
-        return "[]";
-    }
-
-    string result;
-    for(int index = 0; index < length; index++) {
-        int number = list[index];
-        result += to_string(number) + ", ";
-    }
-    return "[" + result.substr(0, result.length() - 2) + "]";
-}
-
-int main() {
-    string line;
-    while (getline(cin, line)) {
-        ListNode* head = stringToListNode(line);
-        
-        vector<int> ret = Solution().nextLargerNodes(head);
-
-        string out = integerVectorToString(ret);
-        cout << out << endl;
-    }
-    return 0;
-}
