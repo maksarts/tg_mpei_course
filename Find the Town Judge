@@ -1,0 +1,27 @@
+https://leetcode.com/problems/find-the-town-judge/
+
+class Solution {
+public:
+    int findJudge(int N, vector<vector<int>>& trust) {
+    if(N == 1){
+        return 1;
+    }
+    if(N == 0){
+        return 0;
+    }
+	int res = -1;
+	map<int, int> kto;
+	map<int, int> komu;
+	for (const auto& pair : trust) {
+		komu[pair[1]]++;
+		kto[pair[0]]++;
+		if (komu[pair[1]] == N - 1 && kto[pair[1]] == 0) {
+			res = pair[1];
+		}
+	}
+	if (kto[res] == 0) {
+		return res;
+	}
+	else return -1;
+}
+};
