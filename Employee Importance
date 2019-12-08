@@ -1,0 +1,40 @@
+https://leetcode.com/problems/employee-importance/
+
+// Employee info
+class Employee {
+public:
+    // It's the unique ID of each node.
+    // unique id of this employee
+    int id;
+    // the importance value of this employee
+    int importance;
+    // the id of direct subordinates
+    vector<int> subordinates;
+};
+*/
+class Solution {
+public:
+    
+    Employee* get_sub(const vector<Employee*>& employees, const int& id) {
+        Employee* sub;
+        for (const auto& item : employees)
+            if (item->id == id)
+                sub = item;
+        return sub;
+    }
+    int getImportance(vector<Employee*> employees, int id) {
+        int res = 0;
+        queue<Employee*> q;
+        q.push(get_sub(employees, id));
+        while (!q.empty()) {
+            Employee* temp = q.front();
+            q.pop();
+            res += temp->importance;
+            for (int i = 0; i < temp->subordinates.size(); i++) {
+                int temp_id = temp->subordinates[i];
+                q.push(get_sub(employees, temp_id));
+            }
+        }
+        return res;
+    }
+};
