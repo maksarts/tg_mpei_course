@@ -1,0 +1,96 @@
+https://leetcode.com/problems/last-stone-weight/
+
+class Solution {
+public:
+        void SiftDown(vector<int>& heap, int i) {
+        while (2 * i + 1 < heap.size()) {
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+            int j = left;
+            if (right < heap.size() && heap[right] > heap[j]) {
+                j = right;
+            }
+            if (heap[i] >= heap[j]) {
+                break;
+            }
+            swap(heap[i], heap[j]);
+            i = j;
+        }
+    }
+    
+    void SiftUp (vector<int>& heap, size_t i){
+        int par = (i - 1) / 2;
+        while (i > 0 && heap[i] > heap[par]){
+            swap(heap[i],heap[par]);
+            i=par;
+            par=(i-1)/2;
+        }
+    }
+    
+    int extractMax(vector<int>& heap) {
+        int max = heap[0];
+        swap(heap[0], heap[heap.size() - 1]);
+        heap.erase(heap.begin() + heap.size() - 1);
+        SiftDown(heap, 0);
+        return max;
+    }
+    
+    void Insert(vector<int>& heap, int x) {
+        heap.push_back(x);
+        SiftUp(heap, heap.size() - 1);
+    }
+    
+    int lastStoneWeight(vector<int>& stones) {
+        for (int i = stones.size()/2 + 1; i > 0; i--) {
+            SiftDown(stones, i - 1);
+        }
+        while (stones.size() >= 2) {
+            int y = extractMax(stones);
+            int x = extractMax(stones);
+            if (y != x) {
+                Insert(stones, y - x);
+            }
+        }
+        return (stones.empty()) ? 0 : stones[0];
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> stones = stringToIntegerVector(line);
+        
+        int ret = Solution().lastStoneWeight(stones);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
