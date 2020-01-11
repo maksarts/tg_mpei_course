@@ -2,16 +2,14 @@ https://leetcode.com/problems/kth-largest-element-in-an-array/
 class Solution {
 public:
     void SiftDown(vector<int>& heap, int i) {
-        while (2 * i + 1 < heap.size()) {
+        while(2  *i + 1 < heap.size()){
             int left = 2 * i + 1;
             int right = 2 * i + 2;
             int j = left;
-            if (right < heap.size() && heap[right] > heap[j]) {
+            if(right < heap.size() && heap[right] > heap[j]){
                 j = right;
             }
-            if (heap[i] >= heap[j]) {
-                break;
-            }
+            if(heap[i] >= heap[j]) break;
             swap(heap[i], heap[j]);
             i = j;
         }
@@ -26,59 +24,13 @@ public:
     }
     
     int findKthLargest(vector<int>& nums, int k) {
-        for (int i = nums.size()/2 + 1; i > 0; i--) {
-            SiftDown(nums, i - 1);
+        for(int i = nums.size()/2 + 1; i >= 0; i--){
+            SiftDown(nums, i);
         }
-        int res;
+        int res = 0;
         for(int i = 0; i < k; i++){
             res = extractMax(nums);
         }
         return res;
     }
 };
-
-void trimLeftTrailingSpaces(string &input) {
-    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
-        return !isspace(ch);
-    }));
-}
-
-void trimRightTrailingSpaces(string &input) {
-    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
-        return !isspace(ch);
-    }).base(), input.end());
-}
-
-vector<int> stringToIntegerVector(string input) {
-    vector<int> output;
-    trimLeftTrailingSpaces(input);
-    trimRightTrailingSpaces(input);
-    input = input.substr(1, input.length() - 2);
-    stringstream ss;
-    ss.str(input);
-    string item;
-    char delim = ',';
-    while (getline(ss, item, delim)) {
-        output.push_back(stoi(item));
-    }
-    return output;
-}
-
-int stringToInteger(string input) {
-    return stoi(input);
-}
-
-int main() {
-    string line;
-    while (getline(cin, line)) {
-        vector<int> nums = stringToIntegerVector(line);
-        getline(cin, line);
-        int k = stringToInteger(line);
-        
-        int ret = Solution().findKthLargest(nums, k);
-
-        string out = to_string(ret);
-        cout << out << endl;
-    }
-    return 0;
-}
