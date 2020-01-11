@@ -1,29 +1,21 @@
 https://leetcode.com/problems/as-far-from-land-as-possible/
 class Solution {
 public:
-    int maxDistance(vector<vector<int>>& grid) {
-      int locMax = 0;
-		queue<pair<int, int>> q;
-		for (int i = 0; i < grid.size(); ++i) {
-			for (int j = 0; j < grid[i].size(); ++j) {
-				if (grid[i][j] == 1) q.push({ i, j });
-			}
-		}
-
-		while (!q.empty()) {
-			pair<int, int> cur = q.front();
-			q.pop();
-			pair<int, int> dirs[4] = { {0, 1}, {0, -1}, {1, 0}, {-1, 0} };
-			for (auto dir : dirs) {
-				int nx = dir.first + cur.first;
-				int ny = dir.second + cur.second;
-				if (nx >= 0 && nx < grid.size() && ny >= 0 && ny < grid[0].size() && grid[nx][ny] == 0) {
-					q.push({ nx, ny });
-					grid[nx][ny] = grid[cur.first][cur.second] + 1;
-					locMax = max(grid[nx][ny], locMax);
-				}
-			}
-		}
-		return (locMax > 0 ? locMax-1 : -1);  
-    }
+    void dfs(vector<vector<int>>& g, int i, int j, int dist, bool land = false) {
+  if (!land) {
+    if (i < 0 || j < 0 || i >= g.size() || j >= g[i].size() || (g[i][j] != 0 && g[i][j] <= dist)) return;
+    g[i][j] = dist;
+  }
+  dfs(g, i - 1, j, dist + 1), dfs(g, i + 1, j, dist + 1), dfs(g, i, j - 1, dist + 1), dfs(g, i, j + 1, dist + 1);
+}
+    
+int maxDistance(vector<vector<int>>& g, int mx = -1) {
+  for (auto i = 0; i < g.size(); ++i)
+    for (auto j = 0; j < g[i].size(); ++j)
+      if (g[i][j] == 1) dfs(g, i, j, 1, true);
+  for (auto i = 0; i < g.size(); ++i)
+    for (auto j = 0; j < g[i].size(); ++j)
+      if (g[i][j] > 1) mx = max(mx, g[i][j] - 1);
+  return mx;
+}
 };
